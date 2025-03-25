@@ -1,142 +1,76 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "fec4c14f",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import streamlit as st\n",
-    "import pandas as pd\n",
-    "import random\n",
-    "\n",
-    "# Load data\n",
-    "@st.cache_data\n",
-    "def load_data():\n",
-    "    return pd.read_csv(\"2024_homeruns_updated.csv\") \n",
-    "\n",
-    "df = load_data()\n",
-    "\n",
-    "# Initialize session state\n",
-    "if \"round\" not in st.session_state:\n",
-    "    st.session_state.round = 0\n",
-    "    st.session_state.score = 0\n",
-    "    st.session_state.history = []\n",
-    "\n",
-    "# Game logic\n",
-    "if st.session_state.round < 10:\n",
-    "    st.subheader(f\"Round {st.session_state.round + 1}/10\")\n",
-    "\n",
-    "    # Randomly select a home run\n",
-    "    row = df.sample(1).iloc[0]\n",
-    "    player_name = \" \".join(row[\"title\"].split()[:2])  # Extract name\n",
-    "    hr_number = row[\"title\"].split(\"(\")[1].split(\")\")[0]  # Extract HR number\n",
-    "    video_url = row[\"video\"]\n",
-    "    actual_x30 = int(row[\"x/30 ballparks\"])\n",
-    "\n",
-    "    st.video(video_url)    st.write(f\"**{player_name} homers ({hr_number})**\")\n",
-    "\n",
-    "    guess = st.number_input(\"Guess how many parks this was a HR in (0-30):\", min_value=0, max_value=30, step=1)\n",
-    "\n",
-    "    if st.button(\"Submit Guess\"):\n",
-    "        # Scoring logic\n",
-    "        diff = abs(guess - actual_x30)\n",
-    "        if diff == 0:\n",
-    "            points = 10\n",
-    "        elif diff == 1:\n",
-    "            points = 8\n",
-    "        elif diff == 2:\n",
-    "            points = 6\n",
-    "        elif diff == 3:\n",
-    "            points = 4\n",
-    "        elif diff == 4:\n",
-    "            points = 2\n",
-    "        else:\n",
-    "            points = 0\n",
-    "\n",
-    "        # Update session state\n",
-    "        st.session_state.round += 1\n",
-    "        st.session_state.score += points\n",
-    "        st.session_state.history.append({\n",
-    "            \"Player\": player_name,\n",
-    "            \"HR #\": hr_number,\n",
-    "            \"Exit Velo\": row[\"exit_velocity\"],\n",
-    "            \"Distance\": row[\"distance_projected\"],\n",
-    "            \"Your Guess\": guess,\n",
-    "            \"Actual\": actual_x30,\n",
-    "            \"Points\": points\n",
-    "        })\n",
-    "\n",
-    "        st.experimental_rerun()\n",
-    "\n",
-    "# Display history\n",
-    "if st.session_state.history:\n",
-    "    st.subheader(\"Game History\")\n",
-    "    st.dataframe(pd.DataFrame(st.session_state.history))\n",
-    "\n",
-    "# End game screen\n",
-    "if st.session_state.round >= 10:\n",
-    "    st.subheader(f\"Game Over! Total Score: {st.session_state.score}\")\n",
-    "    if st.button(\"Restart Game\"):\n",
-    "        st.session_state.round = 0\n",
-    "        st.session_state.score = 0\n",
-    "        st.session_state.history = []\n",
-    "        st.experimental_rerun()\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "aabff54f-d3a1-4f36-b5b2-9589c138193c",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "72cb0efc-fcdc-403b-9c36-68285785e8a0",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "9c3118f1-2277-4c85-816e-3b32b8d5bb49",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "5ba7ef1c-a3b2-40c3-a822-e3c166af9361",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.9.13"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import streamlit as st
+import pandas as pd
+import random
+
+# Load data
+@st.cache_data
+def load_data():
+    return pd.read_csv("2024_homeruns_updated.csv") 
+
+df = load_data()
+
+# Initialize session state
+if "round" not in st.session_state:
+    st.session_state.round = 0
+    st.session_state.score = 0
+    st.session_state.history = []
+
+# Game logic
+if st.session_state.round < 10:
+    st.subheader(f"Round {st.session_state.round + 1}/10")
+
+    # Randomly select a home run
+    row = df.sample(1).iloc[0]
+    player_name = " ".join(row["title"].split()[:2])  # Extract name
+    hr_number = row["title"].split("(")[1].split(")")[0]  # Extract HR number
+    video_url = row["video"]
+    actual_x30 = int(row["x/30 ballparks"])
+
+    st.video(video_url)    st.write(f"**{player_name} homers ({hr_number})**")
+
+    guess = st.number_input("Guess how many parks this was a HR in (0-30):", min_value=0, max_value=30, step=1)
+
+    if st.button("Submit Guess"):
+        # Scoring logic
+        diff = abs(guess - actual_x30)
+        if diff == 0:
+            points = 10
+        elif diff == 1:
+            points = 8
+        elif diff == 2:
+            points = 6
+        elif diff == 3:
+            points = 4
+        elif diff == 4:
+            points = 2
+        else:
+            points = 0
+
+        # Update session state
+        st.session_state.round += 1
+        st.session_state.score += points
+        st.session_state.history.append({
+            "Player": player_name,
+            "HR #": hr_number,
+            "Exit Velo": row["exit_velocity"],
+            "Distance": row["distance_projected"],
+            "Your Guess": guess,
+            "Actual": actual_x30,
+            "Points": points
+        })
+
+        st.experimental_rerun()
+
+# Display history
+if st.session_state.history:
+    st.subheader("Game History")
+    st.dataframe(pd.DataFrame(st.session_state.history))
+
+# End game screen
+if st.session_state.round >= 10:
+    st.subheader(f"Game Over! Total Score: {st.session_state.score}")
+    if st.button("Restart Game"):
+        st.session_state.round = 0
+        st.session_state.score = 0
+        st.session_state.history = []
+        st.experimental_rerun()
