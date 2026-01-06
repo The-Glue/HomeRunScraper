@@ -45,6 +45,6 @@ The final product is a **Streamlit** application that presents the user with 10 
 
 * **App Status:** The Streamlit code is based heavily on a previous project ("PitchGuesser"), adapted here for video display and the X/30 mechanic.
 * **Current Limitation:** A cloud-hosted version is not yet available due to the storage and bandwidth challenge of serving thousands of video files.
-* **Demo:** A local demo of the game is available for viewing **[HERE (Link to Demo Video/GIF)]**.
+* **Demo:** A local demo of the game is available for viewing **[HERE (https://youtu.be/pp5PmpVngqg?si=Hf_iOxKnRyNSRSWg)]**.
 
 Stay tuned for updates as a scalable video storage solution is developed!
